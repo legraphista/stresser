@@ -6,17 +6,14 @@ _Stress test your http endpoint in a cool way_
 
 ___
 
-## Requirements
-- NodeJS 4+
+## Install
+
+`npm i -g stresser`
 
 ___
 
-## Installation
-
-***NodeJS***
-
-There are a number of ways to install node.
-Please look into [NVM](https://github.com/creationix/nvm#installation) or [N](https://github.com/tj/n#installation) for a simple process
+## Requirements
+- NodeJS 4+
 
 ___
 
