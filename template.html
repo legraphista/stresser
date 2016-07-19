@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data</title>
+    <style>
+        body {
+            min-width: 100vw;
+            padding-top: 5px;
+            font-family: Roboto, monospace;
+        }
+
+        .outer {
+            padding: 20px;
+        }
+
+        h2, h3 {
+            font-weight: normal;
+        }
+
+        hr {
+            margin: 5px 0;
+            clear: both;
+        }
+
+        .stats {
+            float: left;
+        }
+
+        .output {
+            float: left;
+        }
+    </style>
+</head>
+<body>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<div class="outer">
+    <div>
+        <h1>%%URL%%</h1>
+    </div>
+    <div class="stats">
+        <h2>Stats:</h2>
+        <h3>1xx: <span>%%1XX%%</span></h3>
+        <h3>2xx: <span>%%2XX%%</span></h3>
+        <h3>3xx: <span>%%3XX%%</span></h3>
+        <h3>4xx: <span>%%4XX%%</span></h3>
+        <h3>5xx: <span>%%5XX%%</span></h3>
+        <h3>T/O: <span>%%T/O%%</span></h3>
+        <h3>ERR: <span>%%ERR%%</span></h3>
+        <h3>RPS: <span>%%RPS%%</span></h3>
+        <h3>MEAN RESPONSE TIME: <span>%%TIME%%</span></h3>
+    </div>
+    <div class="output">
+        <h2>Output:</h2>
+        %%OUTPUT%%
+    </div>
+    <hr>
+    <div id="chart_div"></div>
+    <hr>
+    <div id="chart_div_2"></div>
+    <script>
+        google.charts.load('current', { packages: ['corechart', 'bar'] });
+        google.charts.setOnLoadCallback(draw);
+
+        function extractTimes() {
+            var times = flatRaw.map(function(r) {
+                return r.time;
+            });
+            var maxtime = times.reduce(function(max, val) {
+                return max > val ? max : val
+            }, 0);
+            var cnt = 1000;
+            var chunk = maxtime / cnt;
+
+            var list = [];
+            for (var i = 0; i < cnt; i++) {
+                list.push(null);
+            }
+            times.forEach(function(time) {
+                var idx = (time / chunk ) | 0;
+                if (!list[idx])list[idx] = [(idx * chunk | 0), 0];
+                list[idx][1]++;
+            });
+            return list;
+        }
+
+        function drawTimes() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'Ms');
+            data.addColumn('number', 'Requests');
+
+            data.addRows(extractTimes());
+
+            var options = {
+                chart: {
+                    title: 'Average response time',
+                    subtitle: ''
+                },
+                height: 500,
+                hAxis: {
+                    title: 'ms'
+                },
+                vAxis: {
+                    title: 'Count',
+                    color: '#1976D2'
+                }
+            };
+
+            var chart = new google.charts.Bar(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+
+        function drawReqPerSec() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'Seconds');
+            data.addColumn('number', 'Requests');
+            data.addColumn('number', 'Timeouts');
+            data.addColumn('number', 'Errors');
+            data.addColumn('number', 'Min response time');
+            data.addColumn('number', 'Mean response time');
+            data.addColumn('number', 'Max response time');
+
+            var rps = raw.map(function(r, idx) {
+                var val = [
+                    idx,
+                    r.length,
+                    r.filter(function(r) {
+                        return !!r.to
+                    }).length,
+                    r.filter(function(r) {
+                        return !!r.err
+                    }).length,
+
+                    r.reduce(function(min, r) {
+                        return min < r.time ? min : r.time;
+                    }, Infinity),
+
+                    r.reduce(function(sum, r) {
+                        if (r.to) return sum;
+                        return sum + r.time;
+                    }, 0) / r.filter(function(r) {
+                        return !r.to;
+                    }).length,
+
+                    r.reduce(function(max, r) {
+                        if (r.to) return max;
+                        return max > r.time ? max : r.time;
+                    }, 0)
+                ];
+//            val.push(val[1] * (1 / val[2]) * val[1]);
+                return val;
+            });
+
+            data.addRows(rps);
+
+            var options = {
+                chart: {
+                    title: 'Request count / Response times',
+                    subtitle: ''
+                },
+                height: 500,
+                hAxis: {
+                    title: 'seconds'
+                },
+                series: {
+                    0: { axis: 'requests', color: '#1976D2' },
+                    1: { axis: 'requests', color: '#4A148C' },
+                    2: { axis: 'requests', color: '#b71c1c' },
+                    3: { axis: 'time', color: '#388E3C' },
+                    4: { axis: 'time', color: '#FBC02D' },
+                    5: { axis: 'time', color: '#d32f2f' }
+                },
+                axes: {
+                    y: {
+                        requests: { label: 'Requests' },
+                        error: { side: 'left', label: 'Errors' },
+                        time: { side: 'right', label: 'Milliseconds' }
+                    }
+                }
+            };
+
+            var chart = new google.charts.Bar(document.getElementById('chart_div_2'));
+            chart.draw(data, options);
+        }
+
+        function draw() {
+            drawTimes();
+            drawReqPerSec();
+        }
+
+        var raw = '%%DATA%%';
+        document.getElementsByTagName('body')[0].style.width = raw.length * 150 + 'px';
+        var flatRaw = raw.reduce(function(arr, cur) {
+            return arr.concat(cur);
+        }, []);
+    </script>
+</div>
+</body>
+</html>

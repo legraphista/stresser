@@ -1,0 +1,35 @@
+{
+  "name": "stresser",
+  "version": "0.1.0",
+  "description": "Stress tests HTTP(s) endpoints",
+  "main": "index.js",
+  "author": "Stefan-Gabriel Muscalu <stefan.gabriel.muscalu@gmail.com> (http://my.corneroftheinternet.rocks/)",
+  "license": "MIT",
+  "bin": {
+    "stresser": "./index.js"
+  },
+  "engines": {
+    "node": ">= 4.0.0"
+  },
+  "dependencies": {
+    "async": "^2.0.0",
+    "minimist": "^1.2.0",
+    "node-range": "^0.1.0",
+    "pad": "^1.0.0",
+    "request": "^2.73.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/legraphista/stresser.git"
+  },
+  "bugs": {
+    "url": "https://github.com/legraphista/stresser/issues"
+  },
+  "homepage": "https://github.com/legraphista/stresser#readme",
+  "keywords": [
+    "ab",
+    "stress", "test",
+    "network",
+    "server", "load"
+  ]
+}
