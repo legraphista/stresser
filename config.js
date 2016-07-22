@@ -19,8 +19,8 @@ if (argv.h || argv.help || !url) {
         -t | --timeout= <milliseconds> [10000]
             Sets the time a request waits for response
 
-        -n | --count= <number> [10000]
-            Sets the number of requests
+        -n | --count= <number> [10]
+            Sets the number of seconds
 
         -c | --concurrent= <number> [100]
             Sets the number of concurrent requests
@@ -28,7 +28,11 @@ if (argv.h || argv.help || !url) {
         -m | --method <GET|HEAD|POST|PUT|DELETE|*> [GET]
             Sets the request method
 
-
+        -v | --verbose <e|hc>
+            Sets verbosity
+                - e: Errors
+                - c: HTTP Status Codes
+                - b: HTTP body
     Example: stresser http://example.com/page.html -c 500 -n 20000 -t 20000 --html=/home/reports/report-$(date +%s).html
 `
     );
@@ -38,9 +42,16 @@ if (argv.h || argv.help || !url) {
 
 const html = argv.html === false || argv.html === 'false' ? null : argv.html || path.join(__dirname, 'report', `report-${Date.now()}.html`);
 const timeout = argv.t || argv.timeout || 10000;
-const count = argv.n || argv.count || 10000;
+const count = argv.n || argv.count || 10;
 const concurrent = argv.c || argv.concurrent || 100;
 const method = argv.m || argv.method || 'get';
+
+const _v = argv.v || argv.verbose || '';
+const verbose = {
+    e: ~_v.indexOf('e'),
+    c: ~_v.indexOf('c'),
+    b: ~_v.indexOf('b')
+};
 
 module.exports = {
     url,
@@ -48,5 +59,6 @@ module.exports = {
     count,
     concurrent,
     timeout,
-    html
+    html,
+    verbose
 };
