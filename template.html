@@ -27,9 +27,6 @@
             float: left;
         }
 
-        .output {
-            float: left;
-        }
     </style>
 </head>
 <body>
@@ -39,18 +36,6 @@
         <h1>%%URL%%</h1>
     </div>
     <div class="stats">
-        <h2>Stats:</h2>
-        <h3>1xx: <span>%%1XX%%</span></h3>
-        <h3>2xx: <span>%%2XX%%</span></h3>
-        <h3>3xx: <span>%%3XX%%</span></h3>
-        <h3>4xx: <span>%%4XX%%</span></h3>
-        <h3>5xx: <span>%%5XX%%</span></h3>
-        <h3>T/O: <span>%%T/O%%</span></h3>
-        <h3>ERR: <span>%%ERR%%</span></h3>
-        <h3>RPS: <span>%%RPS%%</span></h3>
-        <h3>MEAN RESPONSE TIME: <span>%%TIME%%</span></h3>
-    </div>
-    <div class="output">
         <h2>Output:</h2>
         %%OUTPUT%%
     </div>
@@ -59,17 +44,25 @@
     <hr>
     <div id="chart_div_2"></div>
     <script>
-        google.charts.load('current', { packages: ['corechart', 'bar'] });
+        google.charts.load('current', { packages: ['corechart', 'bar', 'line'] });
         google.charts.setOnLoadCallback(draw);
 
         function extractTimes() {
-            var times = flatRaw.map(function(r) {
-                return r.time;
-            });
+            var times = raw
+                    .filter(function(r) {
+                        return !!r.code
+                    })
+                    .map(function(r) {
+                        return r.time;
+                    });
+
             var maxtime = times.reduce(function(max, val) {
                 return max > val ? max : val
             }, 0);
             var cnt = 1000;
+            if (maxtime < cnt) {
+                cnt = maxtime;
+            }
             var chunk = maxtime / cnt;
 
             var list = [];
@@ -102,52 +95,38 @@
                 },
                 vAxis: {
                     title: 'Count',
-                    color: '#1976D2'
+                    color: '#64B5F6'
                 }
             };
 
             var chart = new google.charts.Bar(document.getElementById('chart_div'));
-            chart.draw(data, options);
+            chart.draw(data, google.charts.Bar.convertOptions(options));
         }
 
         function drawReqPerSec() {
             var data = new google.visualization.DataTable();
             data.addColumn('number', 'Seconds');
-            data.addColumn('number', 'Requests');
+            data.addColumn('number', 'Pending Requests');
             data.addColumn('number', 'Timeouts');
             data.addColumn('number', 'Errors');
             data.addColumn('number', 'Min response time');
             data.addColumn('number', 'Mean response time');
             data.addColumn('number', 'Max response time');
 
-            var rps = raw.map(function(r, idx) {
+            var rps = secondHistory.map(function(r, idx) {
+                var hasTimeMetrict = r.cnt > 0;
                 var val = [
                     idx,
-                    r.length,
-                    r.filter(function(r) {
-                        return !!r.to
-                    }).length,
-                    r.filter(function(r) {
-                        return !!r.err
-                    }).length,
+                    r.active,
+                    r.to,
+                    r.err,
 
-                    r.reduce(function(min, r) {
-                        return min < r.time ? min : r.time;
-                    }, Infinity),
+                    hasTimeMetrict ? r.min : null,
 
-                    r.reduce(function(sum, r) {
-                        if (r.to) return sum;
-                        return sum + r.time;
-                    }, 0) / r.filter(function(r) {
-                        return !r.to;
-                    }).length,
+                    hasTimeMetrict ? r.time / r.cnt : null,
 
-                    r.reduce(function(max, r) {
-                        if (r.to) return max;
-                        return max > r.time ? max : r.time;
-                    }, 0)
+                    hasTimeMetrict ? r.max : null
                 ];
-//            val.push(val[1] * (1 / val[2]) * val[1]);
                 return val;
             });
 
@@ -163,12 +142,12 @@
                     title: 'seconds'
                 },
                 series: {
-                    0: { axis: 'requests', color: '#1976D2' },
+                    0: { axis: 'requests', color: '#64B5F6' },
                     1: { axis: 'requests', color: '#4A148C' },
-                    2: { axis: 'requests', color: '#b71c1c' },
-                    3: { axis: 'time', color: '#388E3C' },
-                    4: { axis: 'time', color: '#FBC02D' },
-                    5: { axis: 'time', color: '#d32f2f' }
+                    2: { axis: 'requests', color: '#78909C' },
+                    3: { axis: 'time', color: '#4CAF50' },
+                    4: { axis: 'time', color: '#FFF176' },
+                    5: { axis: 'time', color: '#e53935' }
                 },
                 axes: {
                     y: {
@@ -179,8 +158,8 @@
                 }
             };
 
-            var chart = new google.charts.Bar(document.getElementById('chart_div_2'));
-            chart.draw(data, options);
+            var chart = new google.charts.Line(document.getElementById('chart_div_2'));
+            chart.draw(data, google.charts.Line.convertOptions(options));
         }
 
         function draw() {
@@ -188,11 +167,10 @@
             drawReqPerSec();
         }
 
+        var secondHistory = '%%SECONDS%%';
         var raw = '%%DATA%%';
-        document.getElementsByTagName('body')[0].style.width = raw.length * 150 + 'px';
-        var flatRaw = raw.reduce(function(arr, cur) {
-            return arr.concat(cur);
-        }, []);
+
+
     </script>
 </div>
 </body>

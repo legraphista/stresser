@@ -28,8 +28,11 @@
   "homepage": "https://github.com/legraphista/stresser#readme",
   "keywords": [
     "ab",
-    "stress", "test",
+    "stress",
+    "test",
     "network",
-    "server", "load"
+    "server",
+    "load",
+    "loader"
   ]
 }
