@@ -10,7 +10,7 @@ ___
 
 `npm i -g stresser`
 
-_For legacy v1 documentation please go [here](https://github.com/legraphista/stresser/tree/v1)
+_For legacy v1 documentation please go [here](https://github.com/legraphista/stresser/tree/v1)_
 ___
 
 ## Usage
