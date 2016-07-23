@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 'use strict';
 const cluster = require('cluster');
 const workers = Object.keys(cluster.workers);
