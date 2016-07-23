@@ -12,11 +12,6 @@ ___
 
 ___
 
-## Requirements
-- NodeJS 4+
-
-___
-
 ## Usage
 
 After installing and configuring you can simply run:
@@ -31,26 +26,39 @@ Usage: stresser <URL> [options]
     Options:
         -h | --help
             Outputs this helpful information
-            
-        --html=<path/to/report/file.html> [${path.join(__dirname, 'report', `report-${Date.now()}.html`)}]
-            Outputs an HTML report file to location
-            Set --html=false if you want to disable it
 
         -t | --timeout= <milliseconds> [10000]
             Sets the time a request waits for response
 
-        -n | --count= <number> [10000]
-            Sets the number of requests
+        -n | --count= <number> [10]
+            Sets the number of seconds
 
         -c | --concurrent= <number> [100]
             Sets the number of concurrent requests
 
         -m | --method <GET|HEAD|POST|PUT|DELETE|*> [GET]
             Sets the request method
+
+        -f | --force
+            Forces the stress test to stop at the requested time even if requests have not finished
+
+        -v | --verbose <e|b|c>
+            Sets verbosity
+                - e: Errors
+                - c: HTTP Status Codes
+                - b: HTTP body
+
+        --html=<path/to/report/file.html> [${path.join(__dirname, 'report', `report-${Date.now()}.html`)}]
+            Outputs an HTML report file to location
+            Set --html=false if you want to disable it
+
+        --threads=<number> [#cpus]
+            The number of cpus that will be used to stress test
 ```
 
-Example: 
-`stresser http://example.com/page.html -c 500 -n 20000 -t 20000 --html=/home/reports/report-$(date +%s).html`
+Example:
+
+`stresser http://example.com/page.html -c 10000 -n 10 -t 20000 --html=/home/reports/report-$(date +%s).html --threads=16 --force`
 
 ___
 

@@ -27,7 +27,7 @@ if (argv.h || argv.help || !url) {
         -f | --force
             Forces the stress test to stop at the requested time even if requests have not finished
 
-        -v | --verbose <e|hc>
+        -v | --verbose <e|b|c>
             Sets verbosity
                 - e: Errors
                 - c: HTTP Status Codes
