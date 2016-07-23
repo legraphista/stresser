@@ -80,7 +80,7 @@ const STATS = (data, reqCnt) => {
 
         const forceStop = (
             config.force &&
-            _second >= config.count
+            _second > config.count
         );
 
         if (
