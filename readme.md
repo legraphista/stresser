@@ -6,9 +6,9 @@ _Stress test your http endpoint in a cool way_
 
 ___
 
-## Install
+## Version One Install
 
-`npm i -g stresser`
+`npm i -g stresser@1`
 
 ___
 
