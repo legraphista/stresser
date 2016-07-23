@@ -6,7 +6,6 @@ const display = (filePath, data, output, seconds,  url) => {
 
     file = file.replace('\'%%DATA%%\'', JSON.stringify(data));
 
-    seconds.splice(0, 1);
     file = file.replace('\'%%SECONDS%%\'', JSON.stringify(seconds));
     file = file.replace('%%OUTPUT%%', output.split('\n').map(str => `<h3>${str}</h3>`).join('\n'));
 

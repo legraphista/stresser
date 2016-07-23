@@ -100,7 +100,7 @@
             };
 
             var chart = new google.charts.Bar(document.getElementById('chart_div'));
-            chart.draw(data, options);
+            chart.draw(data, google.charts.Bar.convertOptions(options));
         }
 
         function drawReqPerSec() {
@@ -114,17 +114,18 @@
             data.addColumn('number', 'Max response time');
 
             var rps = secondHistory.map(function(r, idx) {
+                var hasTimeMetrict = r.cnt > 0;
                 var val = [
                     idx,
-                    r.cnt + r.active ,
+                    r.active,
                     r.to,
                     r.err,
 
-                    r.min || null,
+                    hasTimeMetrict ? r.min : null,
 
-                    r.time / r.cnt,
+                    hasTimeMetrict ? r.time / r.cnt : null,
 
-                    r.max || null
+                    hasTimeMetrict ? r.max : null
                 ];
 //            val.push(val[1] * (1 / val[2]) * val[1]);
                 return val;
@@ -159,7 +160,7 @@
             };
 
             var chart = new google.charts.Line(document.getElementById('chart_div_2'));
-            chart.draw(data, options);
+            chart.draw(data, google.charts.Line.convertOptions(options));
         }
 
         function draw() {

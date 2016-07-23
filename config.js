@@ -53,6 +53,9 @@ const verbose = {
     b: ~_v.indexOf('b')
 };
 
+const CPUs = require('os').cpus().length;
+const concurrentPerCPU = Math.floor(concurrent / CPUs);
+
 module.exports = {
     url,
     method,
@@ -60,5 +63,7 @@ module.exports = {
     concurrent,
     timeout,
     html,
-    verbose
+    verbose,
+    concurrentPerCPU,
+    CPUs
 };
