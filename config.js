@@ -12,10 +12,6 @@ if (argv.h || argv.help || !url) {
         -h | --help
             Outputs this helpful information
 
-        --html=<path/to/report/file.html> [${path.join(__dirname, 'report', `report-${Date.now()}.html`)}]
-            Outputs an HTML report file to location
-            Set --html=false if you want to disable it
-
         -t | --timeout= <milliseconds> [10000]
             Sets the time a request waits for response
 
@@ -33,7 +29,15 @@ if (argv.h || argv.help || !url) {
                 - e: Errors
                 - c: HTTP Status Codes
                 - b: HTTP body
-    Example: stresser http://example.com/page.html -c 500 -n 20000 -t 20000 --html=/home/reports/report-$(date +%s).html
+
+        --html=<path/to/report/file.html> [${path.join(__dirname, 'report', `report-${Date.now()}.html`)}]
+            Outputs an HTML report file to location
+            Set --html=false if you want to disable it
+
+        --threads=<number> [#cpus]
+            The number of cpus that will be used to stress test
+
+    Example: stresser http://example.com/page.html -c 10000 -n 10 -t 20000 --html=/home/reports/report-$(date +%s).html --threads=16
 `
     );
 
@@ -53,7 +57,7 @@ const verbose = {
     b: ~_v.indexOf('b')
 };
 
-const CPUs = require('os').cpus().length;
+const CPUs = argv.threads || require('os').cpus().length;
 const concurrentPerCPU = Math.floor(concurrent / CPUs);
 
 module.exports = {

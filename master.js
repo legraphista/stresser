@@ -92,7 +92,6 @@ workers
     .map(wid => cluster.workers[wid])
     .forEach(worker => {
         worker.on('message', (msg) => {
-            console.error(JSON.stringify(msg));
             switch (msg.type) {
                 case 'stats':
                     STATS(msg.data, msg.req);
@@ -113,7 +112,7 @@ const printStats = (stats) => {
     const str = (
         `  S=${pad(6, _second)} |   T=${pad(6, stats.cnt + stats.to + stats.err)} | A=${pad(6, _requestCountActive)}
   E=${pad(6, stats.err)} | T/O=${pad(6, stats.to)} | \
-W/B=${pad(6, stats.body)} | AVG=${pad(6, (stats.time / stats.cnt) | 0)} | MI=${pad(6, stats.min)} | MX=${pad(6, stats.max)}
+W/B=${pad(6, stats.body)} | AVG=${pad(6, (stats.time / stats.cnt) | 0)} | MIN=${pad(6, stats.min)} | MAX=${pad(6, stats.max)}
 ${range(1, 6).map(code => `${code}xx=${pad(6, stats.code[code.toString()])}`).join(' | ')}
 `);
 

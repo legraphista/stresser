@@ -13,7 +13,7 @@ const display = (filePath, data, output, seconds,  url) => {
 
     fs.writeFileSync(filePath, file);
 
-    console.log('report file available at:', `file://${path.resolve(filePath)}`);
+    console.error('report file available at:', `file://${path.resolve(filePath)}`);
 };
 
 module.exports = display;
