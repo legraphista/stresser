@@ -70,11 +70,21 @@ const STATS = (data, reqCnt) => {
         printStats(_statsForSecond);
 
         _second++;
-        if (
+
+        const somethingLeft = (
             _statsForSecond.cnt === 0 &&
             _statsForSecond.err === 0 &&
             _statsForSecond.to === 0 &&
             _requestCountActive === 0
+        );
+
+        const forceStop = (
+            config.force &&
+            _second >= config.count
+        );
+
+        if (
+            somethingLeft || forceStop
         ) {
             SEND('raw');
         } else {
@@ -108,13 +118,20 @@ let _requestCountActive = 0;
 let _second = 0;
 const _secondHistory = [];
 
-const printStats = (stats) => {
-    const str = (
+const printStats = (stats, finish) => {
+    let str = (
         `  S=${pad(6, _second)} |   T=${pad(6, stats.cnt + stats.to + stats.err)} | A=${pad(6, _requestCountActive)}
   E=${pad(6, stats.err)} | T/O=${pad(6, stats.to)} | \
 W/B=${pad(6, stats.body)} | AVG=${pad(6, (stats.time / stats.cnt) | 0)} | MIN=${pad(6, stats.min)} | MAX=${pad(6, stats.max)}
 ${range(1, 6).map(code => `${code}xx=${pad(6, stats.code[code.toString()])}`).join(' | ')}
 `);
+
+    const howManyReq = config.concurrentPerCPU * config.CPUs * config.count;
+    const howManyDone = stats.cnt + stats.err + stats.to;
+    if (finish && howManyDone < howManyReq) {
+        str += `NOT FINISHED=${pad(6, howManyReq - howManyDone)}
+`;
+    }
 
     console.error(str);
     return str;
@@ -147,7 +164,7 @@ const _finish = () => {
 
         stats.code[req.code.toString()[0]]++;
 
-        if (!req.to && !req.err) {
+        if (req.time) {
             stats.time += req.time;
             stats.cnt++;
 
@@ -162,7 +179,7 @@ const _finish = () => {
 
     console.error('~~~ Aggregated Stats: ~~~');
 
-    const statsStr = printStats(stats);
+    const statsStr = printStats(stats, true);
 
     if (config.html) {
         display(config.html, _requests, statsStr, _secondHistory, config.url);

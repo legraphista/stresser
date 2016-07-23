@@ -24,6 +24,9 @@ if (argv.h || argv.help || !url) {
         -m | --method <GET|HEAD|POST|PUT|DELETE|*> [GET]
             Sets the request method
 
+        -f | --force
+            Forces the stress test to stop at the requested time even if requests have not finished
+
         -v | --verbose <e|hc>
             Sets verbosity
                 - e: Errors
@@ -37,7 +40,8 @@ if (argv.h || argv.help || !url) {
         --threads=<number> [#cpus]
             The number of cpus that will be used to stress test
 
-    Example: stresser http://example.com/page.html -c 10000 -n 10 -t 20000 --html=/home/reports/report-$(date +%s).html --threads=16
+
+    Example: stresser http://example.com/page.html -c 10000 -n 10 -t 20000 --html=/home/reports/report-$(date +%s).html --threads=16 --force
 `
     );
 
@@ -59,6 +63,7 @@ const verbose = {
 
 const CPUs = argv.threads || require('os').cpus().length;
 const concurrentPerCPU = Math.floor(concurrent / CPUs);
+const force = argv.f || argv.force;
 
 module.exports = {
     url,
@@ -69,5 +74,6 @@ module.exports = {
     html,
     verbose,
     concurrentPerCPU,
-    CPUs
+    CPUs,
+    force
 };
