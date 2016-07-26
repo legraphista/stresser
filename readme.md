@@ -2,7 +2,7 @@
 
 _Stress test your http endpoint in a cool way_
 
-![Overview](https://raw.githubusercontent.com/legraphista/stresser/master/logo/logo.png)
+![Overview](https://raw.githubusercontent.com/legraphista/stresser/v1/logo/logo.png)
 
 ___
 
