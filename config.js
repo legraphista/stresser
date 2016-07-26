@@ -48,7 +48,7 @@ if (argv.h || argv.help || !url) {
     process.exit(1);
 }
 
-const html = argv.html === false || argv.html === 'false' ? null : argv.html || path.join(__dirname, 'report', `report-${Date.now()}.html`);
+const html = argv.html === false || argv.html === 'false' ? null : argv.html || path.join(path.dirname(process.argv[1]), 'report', `report-${Date.now()}.html`);
 const timeout = argv.t || argv.timeout || 10000;
 const count = argv.n || argv.count || 10;
 const concurrent = argv.c || argv.concurrent || 100;
@@ -77,3 +77,5 @@ module.exports = {
     CPUs,
     force
 };
+
+html && console.error('Will output report file to', html);
