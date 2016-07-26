@@ -71,4 +71,4 @@ ___
 
 ## License
 
-`stresser` plugin reporter is offered under MIT license. Please refer to [this page](https://github.com/legraphista/stresser/blob/master/LICENSE) for more info.
+`stresser` is offered under MIT license. Please refer to [this page](https://github.com/legraphista/stresser/blob/master/LICENSE) for more info.
