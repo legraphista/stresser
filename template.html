@@ -48,14 +48,6 @@
         google.charts.setOnLoadCallback(draw);
 
         function extractTimes() {
-            var times = raw
-                    .filter(function(r) {
-                        return !!r.code
-                    })
-                    .map(function(r) {
-                        return r.time;
-                    });
-
             var maxtime = times.reduce(function(max, val) {
                 return max > val ? max : val
             }, 0);
@@ -94,7 +86,7 @@
                     title: 'ms'
                 },
                 vAxis: {
-                    title: 'Count',
+                    title: 'Requests',
                     color: '#64B5F6'
                 }
             };
@@ -168,7 +160,7 @@
         }
 
         var secondHistory = '%%SECONDS%%';
-        var raw = '%%DATA%%';
+        var times = '%%TIMES%%';
 
 
     </script>

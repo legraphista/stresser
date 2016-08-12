@@ -8,7 +8,7 @@ const display = (filePath, data, output, seconds, url) => {
 
     let file = fs.readFileSync(path.join(__dirname, 'template.html')).toString();
 
-    file = file.replace('\'%%DATA%%\'', JSON.stringify(data));
+    file = file.replace('\'%%TIMES%%\'', JSON.stringify(data.filter(r => !!r.code).map(r => r.time)));
 
     file = file.replace('\'%%SECONDS%%\'', JSON.stringify(seconds));
     file = file.replace('%%OUTPUT%%', output.split('\n').map(str => `<h3>${str}</h3>`).join('\n'));
