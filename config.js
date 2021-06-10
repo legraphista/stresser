@@ -62,7 +62,7 @@ const verbose = {
 };
 
 const CPUs = argv.threads || require('os').cpus().length;
-const concurrentPerCPU = Math.floor(concurrent / CPUs);
+const concurrentPerCPU = Math.max(Math.floor(concurrent / CPUs), 1);
 const force = argv.f || argv.force;
 
 module.exports = {

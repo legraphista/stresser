@@ -38,3 +38,4 @@ fabric.properties
 .idea/
 report/report-test.html
 dev/
+report/**.html
