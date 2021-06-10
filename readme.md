@@ -40,6 +40,9 @@ Usage: stresser <URL> [options]
         -m | --method <GET|HEAD|POST|PUT|DELETE|*> [GET]
             Sets the request method
 
+        -b | --body <body as string>
+            Sets body of the request (JSON)
+
         -f | --force
             Forces the stress test to stop at the requested time even if requests have not finished
 
@@ -104,7 +107,7 @@ For bugs and/or feature requests please refer to the [Github page](https://githu
 ___
 
 ## Roadmap
- - Implement option to send custom headers and custom body payload
+ - Implement option to send custom headers ~~and custom body payload~~
  - Add pie chart with different http codes distribution 
  - Implement a slave / master system in order to stress test from multiple machines, for tests big enough (10k+) where the hardware becomes a bottleneck
 
