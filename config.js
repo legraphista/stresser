@@ -24,6 +24,9 @@ if (argv.h || argv.help || !url) {
         -m | --method <GET|HEAD|POST|PUT|DELETE|*> [GET]
             Sets the request method
 
+        -b | --body <body as string>
+            Sets body of the request (JSON)
+
         -f | --force
             Forces the stress test to stop at the requested time even if requests have not finished
 
@@ -53,6 +56,7 @@ const timeout = argv.t || argv.timeout || 10000;
 const count = argv.n || argv.count || 10;
 const concurrent = argv.c || argv.concurrent || 100;
 const method = argv.m || argv.method || 'get';
+const body = argv.b || argv.body;
 
 const _v = argv.v || argv.verbose || '';
 const verbose = {
@@ -68,6 +72,7 @@ const force = argv.f || argv.force;
 module.exports = {
     url,
     method,
+    body,
     count,
     concurrent,
     timeout,

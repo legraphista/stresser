@@ -62,8 +62,12 @@ const SETUP = (data) => {
         url: config.url,
         method: config.method,
         timeout: config.timeout
-    };
-    concurrent = config.concurrentPerCPU;
+    }
+    concurrent = data.concurrentPerCPU;
+
+    if (config.method === "POST") {
+        requestOptions.body = JSON.stringify(config.body);
+    }
 };
 
 const STATS = () => {
