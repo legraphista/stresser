@@ -66,7 +66,13 @@ const SETUP = (data) => {
     concurrent = data.concurrentPerCPU;
 
     if (config.method === "POST") {
-        requestOptions.body = JSON.stringify(config.body);
+        let body = config.body;
+
+        if (!requestOptions.headers) requestOptions.headers = {};
+        requestOptions.headers['Content-Type'] = 'application/json';
+        requestOptions.headers['Content-Length'] = body.length;
+        
+        requestOptions.body = body;
     }
 };
 
