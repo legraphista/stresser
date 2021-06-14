@@ -1,6 +1,6 @@
 {
   "name": "stresser",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "description": "Stress tests HTTP(s) endpoints",
   "main": "index.js",
   "author": "Stefan-Gabriel Muscalu <stefan.gabriel.muscalu@gmail.com> (http://my.corneroftheinternet.rocks/)",
